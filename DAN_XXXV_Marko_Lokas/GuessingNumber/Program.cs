@@ -9,8 +9,11 @@ namespace GuessingNumber
 {
     class Program
     {
+        //Number participants in game
         public static int NumberParticipantsInt;
+        //number guess
         public static int NumberGuessInt;
+        //List all participants
         public static List<Thread> ListParticipants = new List<Thread>();
         public static Thread Thread_Generator = new Thread(new ThreadStart(CreateThreads));
         public static bool exitApp = true;
@@ -34,14 +37,19 @@ namespace GuessingNumber
                     case "1":
                         NumberGuessInt = 0;
                         NumberParticipantsInt = 0;
+                        //Crate and start first thread
                         Thread FirstThread = new Thread(new ThreadStart(InitialSettings));
                         FirstThread.Start();
                         FirstThread.Join();
 
+                        //when the first thread is completed, the second thread is also completed
+                        //all threads are started after the second thread has generated all new threads
                         foreach (var item in ListParticipants)
                         {
                             item.Start();
                         }
+
+                        //Logic to display the main menu
                         if (exitApp == false)
                         {
                             break;
@@ -99,7 +107,11 @@ namespace GuessingNumber
                 }
             } while (mainMenu);
         }
-
+        /// <summary>
+        /// Method for entering initial settings
+        ///Entry of participants - participantNumberInt
+        ///Enter the number to be guessed - guessNumberInt
+        /// </summary>
         public static void InitialSettings()
         {
             bool participantBool = false;
@@ -116,7 +128,7 @@ namespace GuessingNumber
                 if (participantsNumber == "0")
                 {
                     Console.Clear();
-                    Console.WriteLine("You have successfully returned to the Main menu\n Press enter.");
+                    Console.WriteLine("Press enter to returned Main menu.");
                     return;
                 }
                 participantBool = int.TryParse(participantsNumber, out participantNumberInt);
@@ -128,8 +140,8 @@ namespace GuessingNumber
                     participantBool = false;
                 }
             } while (!participantBool);
-
             NumberParticipantsInt = participantNumberInt;
+
             //Insert number needed to guess
             do
             {
@@ -138,7 +150,7 @@ namespace GuessingNumber
                 if (guessNumber == "0")
                 {
                     Console.Clear();
-                    Console.WriteLine("You have successfully returned to the Main menu\n Press enter.");
+                    Console.WriteLine("Press enter to returned Main menu..");
                     return;
                 }
                 guessBool = int.TryParse(guessNumber, out guessNumberInt);
@@ -150,19 +162,23 @@ namespace GuessingNumber
                     guessBool = false;
                 }
             } while (!guessBool);
-
             NumberGuessInt = guessNumberInt;
 
+            //Starting Thread_Generator thread, that creates new threads for all participants
             Thread_Generator.Start();
             Console.Clear();
             Console.WriteLine("The number of participants has just been entered");
             Console.WriteLine("Participants number: " + NumberParticipantsInt);
             Console.WriteLine("The number to be guessed is determined");
 
+            //Waiting for all threads to be created
             Thread_Generator.Join();
 
         }
 
+        /// <summary>
+        /// Method for creating threds
+        /// </summary>
         public static void CreateThreads()
         {
             for (int i = 1; i <= NumberParticipantsInt; i++)
@@ -173,16 +189,28 @@ namespace GuessingNumber
             }
         }
 
+        /// <summary>
+        /// Locker
+        /// </summary>
         private static readonly object locker = new object();
+        /// <summary>
+        /// An indicator of whether a resource is locked
+        /// </summary>
         static bool lockTaken = false;
+
+        /// <summary>
+        /// Method for guessing numbers
+        /// </summary>
         public static void GuessNumbers()
         {
             bool exitWhile = true;
+            //A loop in which all threads rotate until the given number is hit
             while (exitWhile == true)
             {
-
+                //Generate random number
                 int randomNum = RandomNumber();
                 Thread thread = Thread.CurrentThread;
+                //If there is only one thread, no lock is required
                 if (ListParticipants.Count == 1)
                 {
                     Console.WriteLine();
@@ -191,7 +219,7 @@ namespace GuessingNumber
 
                     bool evenBool;
                     bool oddBool;
-
+                    //If the specified number is hit
                     if (NumberGuessInt == randomNum)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -202,9 +230,10 @@ namespace GuessingNumber
                         exitApp = false;
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("Press 2X any key to exit app");
-                        Console.ReadLine();
+                        Console.ReadKey();
                         System.Environment.Exit(0);
                     }
+                    //If the specified number is not hit
                     else
                     {
                         Console.WriteLine($"\n\nParticipiant: {thread.Name.ToString()}\nParticipant number: {randomNum}");
@@ -218,7 +247,7 @@ namespace GuessingNumber
                             evenBool = false;
                             oddBool = true;
                         }
-
+                        //Print if the number being guessed is even
                         if (randomNum % 2 == 0 && evenBool)
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -226,6 +255,7 @@ namespace GuessingNumber
                             Console.ForegroundColor = ConsoleColor.Red;
 
                         }
+                        //Print if the number being guessed is odd
                         else if (randomNum % 2 == 1 && oddBool)
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -236,6 +266,7 @@ namespace GuessingNumber
                         Console.ForegroundColor = ConsoleColor.Red;
                     }
                 }
+                //If there are more participants, it is necessary to lock the printout
                 else
                 {
                     lock (locker)
@@ -247,11 +278,13 @@ namespace GuessingNumber
 
                         bool evenBool;
                         bool oddBool;
-
+                        //If the specified number is hit
                         if (NumberGuessInt == randomNum)
                         {
                             lock (locker)
                             {
+                                //When it finds the correct number, it locks the printout 
+                                //and does not allow further movement through the loop
                                 lockTaken = false;
                                 try
                                 {
@@ -270,12 +303,10 @@ namespace GuessingNumber
                                 }
                                 finally
                                 {
-                                    //if (lockTaken) Monitor.Exit(locker);
                                 }
-
                             }
-
                         }
+                        //If the specified number is not hit
                         else
                         {
                             Console.WriteLine($"\n\nParticipiant: {thread.Name.ToString()}\nParticipant number: {randomNum}");
@@ -289,7 +320,7 @@ namespace GuessingNumber
                                 evenBool = false;
                                 oddBool = true;
                             }
-
+                            //Print if the number being guessed is even
                             if (randomNum % 2 == 0 && evenBool)
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
@@ -297,6 +328,7 @@ namespace GuessingNumber
                                 Console.ForegroundColor = ConsoleColor.Red;
 
                             }
+                            //Print if the number being guessed is odd
                             else if (randomNum % 2 == 1 && oddBool)
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
@@ -312,6 +344,10 @@ namespace GuessingNumber
             }
         }
 
+        /// <summary>
+        /// Method for random number generation
+        /// </summary>
+        /// <returns></returns>
         static int RandomNumber()
         {
             Thread.Sleep(100);
