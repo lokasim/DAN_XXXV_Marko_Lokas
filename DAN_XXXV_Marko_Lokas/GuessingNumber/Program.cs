@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace GuessingNumber
 {
@@ -49,7 +47,7 @@ namespace GuessingNumber
                             item.Start();
                         }
 
-                        //Logic to display the main menu
+                        //Logic to print the main menu
                         if (exitApp == false)
                         {
                             break;
@@ -109,8 +107,8 @@ namespace GuessingNumber
         }
         /// <summary>
         /// Method for entering initial settings
-        ///Entry of participants - participantNumberInt
-        ///Enter the number to be guessed - guessNumberInt
+        /// Entry of participants - participantNumberInt
+        /// Enter the number to be guessed - guessNumberInt
         /// </summary>
         public static void InitialSettings()
         {
@@ -167,13 +165,14 @@ namespace GuessingNumber
             //Starting Thread_Generator thread, that creates new threads for all participants
             Thread_Generator.Start();
             Console.Clear();
+            //When the creation of threads begins, it is displayed how 
+            //many participants there are and that the number of selected ones
             Console.WriteLine("The number of participants has just been entered");
             Console.WriteLine("Participants number: " + NumberParticipantsInt);
             Console.WriteLine("The number to be guessed is determined");
 
             //Waiting for all threads to be created
             Thread_Generator.Join();
-
         }
 
         /// <summary>
@@ -193,6 +192,7 @@ namespace GuessingNumber
         /// Locker
         /// </summary>
         private static readonly object locker = new object();
+
         /// <summary>
         /// An indicator of whether a resource is locked
         /// </summary>
@@ -251,7 +251,7 @@ namespace GuessingNumber
                         if (randomNum % 2 == 0 && evenBool)
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine(thread.Name.ToString() + " hit the parity of the number!");
+                            Console.WriteLine(thread.Name.ToString() + " hit the parity of the number! \n(EVEN NUMBERs)");
                             Console.ForegroundColor = ConsoleColor.Red;
 
                         }
@@ -259,7 +259,7 @@ namespace GuessingNumber
                         else if (randomNum % 2 == 1 && oddBool)
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine(thread.Name.ToString() + " hit the parity of the number!");
+                            Console.WriteLine(thread.Name.ToString() + " hit the parity of the number! \n(ODD NUMBERs)");
                             Console.ForegroundColor = ConsoleColor.Red;
                         }
                         Console.Write(new string('=', 50));
@@ -284,10 +284,11 @@ namespace GuessingNumber
                             lock (locker)
                             {
                                 //When it finds the correct number, it locks the printout 
-                                //and does not allow further movement through the loop
+                                //and does not allow further movement through the loop, other threads
                                 lockTaken = false;
                                 try
                                 {
+
                                     Monitor.Enter(locker, ref lockTaken);
                                     Monitor.Wait(locker);
                                     Console.ForegroundColor = ConsoleColor.Green;
@@ -299,6 +300,7 @@ namespace GuessingNumber
                                     Console.ForegroundColor = ConsoleColor.Blue;
                                     Console.WriteLine("Press 2X any key to exit app");
                                     Console.ReadLine();
+                                    //exit application
                                     System.Environment.Exit(0);
                                 }
                                 finally
@@ -324,7 +326,7 @@ namespace GuessingNumber
                             if (randomNum % 2 == 0 && evenBool)
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine(thread.Name.ToString() + " hit the parity of the number!");
+                                Console.WriteLine(thread.Name.ToString() + " hit the parity of the number! \n(EVEN NUMBERs)");
                                 Console.ForegroundColor = ConsoleColor.Red;
 
                             }
@@ -332,7 +334,7 @@ namespace GuessingNumber
                             else if (randomNum % 2 == 1 && oddBool)
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine(thread.Name.ToString() + " hit the parity of the number!");
+                                Console.WriteLine(thread.Name.ToString() + " hit the parity of the number! \n(ODD NUMBERs)");
                                 Console.ForegroundColor = ConsoleColor.Red;
                             }
                             Console.Write(new string('=', 50));
@@ -354,6 +356,5 @@ namespace GuessingNumber
             Random random = new Random();
             return random.Next(1, 101);
         }
-
     }
 }
