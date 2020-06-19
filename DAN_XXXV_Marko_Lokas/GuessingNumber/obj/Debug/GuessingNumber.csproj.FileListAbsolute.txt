@@ -1,0 +1,7 @@
+C:\Users\panonit\Desktop\DAN_XXXV_Marko_Lokas\DAN_XXXV_Marko_Lokas\GuessingNumber\bin\Debug\GuessingNumber.exe.config
+C:\Users\panonit\Desktop\DAN_XXXV_Marko_Lokas\DAN_XXXV_Marko_Lokas\GuessingNumber\bin\Debug\GuessingNumber.exe
+C:\Users\panonit\Desktop\DAN_XXXV_Marko_Lokas\DAN_XXXV_Marko_Lokas\GuessingNumber\bin\Debug\GuessingNumber.pdb
+C:\Users\panonit\Desktop\DAN_XXXV_Marko_Lokas\DAN_XXXV_Marko_Lokas\GuessingNumber\obj\Debug\GuessingNumber.csprojAssemblyReference.cache
+C:\Users\panonit\Desktop\DAN_XXXV_Marko_Lokas\DAN_XXXV_Marko_Lokas\GuessingNumber\obj\Debug\GuessingNumber.csproj.CoreCompileInputs.cache
+C:\Users\panonit\Desktop\DAN_XXXV_Marko_Lokas\DAN_XXXV_Marko_Lokas\GuessingNumber\obj\Debug\GuessingNumber.exe
+C:\Users\panonit\Desktop\DAN_XXXV_Marko_Lokas\DAN_XXXV_Marko_Lokas\GuessingNumber\obj\Debug\GuessingNumber.pdb
